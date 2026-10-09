@@ -2,7 +2,7 @@
 import hashlib
 import json
 from pathlib import Path
-from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
+from zipfile import ZipFile, ZipInfo, ZIP_STORED
 
 ROOT = Path(__file__).resolve().parents[1]
 MEMBERS = ("bootstrap.js", "bridge.js", "manifest.json", "LICENSE")
@@ -19,10 +19,11 @@ def build():
     dist = ROOT / "dist"
     dist.mkdir(exist_ok=True)
     target = dist / f"zotero-bilingual-reader-{version}.xpi"
-    with ZipFile(target, "w", compression=ZIP_DEFLATED) as archive:
+    # Stored entries avoid byte differences between zlib implementations.
+    with ZipFile(target, "w", compression=ZIP_STORED) as archive:
         for member in MEMBERS:
             info = ZipInfo(member, (2026, 1, 1, 0, 0, 0))
-            info.compress_type = ZIP_DEFLATED
+            info.compress_type = ZIP_STORED
             info.external_attr = 0o644 << 16
             path = ROOT / member if member == "LICENSE" else ROOT / "addon" / member
             archive.writestr(info, public_bytes(path))

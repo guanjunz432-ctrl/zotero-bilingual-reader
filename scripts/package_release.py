@@ -2,7 +2,7 @@
 import hashlib
 import json
 from pathlib import Path
-from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
+from zipfile import ZipFile, ZipInfo, ZIP_STORED
 
 from build import build, public_bytes
 from privacy_check import ROOT, public_files, main as check_privacy
@@ -14,10 +14,10 @@ def main():
     xpi = build()
     version = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))["version"]
     source = ROOT / "dist" / f"zotero-bilingual-reader-{version}-source.zip"
-    with ZipFile(source, "w", compression=ZIP_DEFLATED) as archive:
+    with ZipFile(source, "w", compression=ZIP_STORED) as archive:
         for member in public_files():
             info = ZipInfo(member, (2026, 1, 1, 0, 0, 0))
-            info.compress_type = ZIP_DEFLATED
+            info.compress_type = ZIP_STORED
             info.external_attr = 0o644 << 16
             archive.writestr(info, public_bytes(ROOT / member))
     sums = "".join(f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}\n" for path in (xpi, source))
