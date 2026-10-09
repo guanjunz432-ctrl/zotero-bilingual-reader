@@ -1,0 +1,30 @@
+name: Bug report / 问题反馈
+description: Report a reproducible issue without personal documents or account data.
+body:
+  - type: markdown
+    attributes:
+      value: '请勿上传认证文件、账户截图、真实私人论文或未脱敏日志。Please use a synthetic or redistributable sample.'
+  - type: input
+    id: version
+    attributes:
+      label: Plugin, Zotero and Windows versions
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps and expected behavior / 步骤与预期
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of scripts/doctor.py (no login output)
+      render: json
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I checked that this report contains no credentials or personal documents.
+          required: true
