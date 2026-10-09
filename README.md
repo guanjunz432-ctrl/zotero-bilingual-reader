@@ -2,7 +2,7 @@
 
 **在 Zotero 中生成原版式中英对照 PDF，连同图中文字一起阅读。**
 
-[English](README.en.md) · [安装与操作](docs/installation.md) · [隐私说明](PRIVACY.md) · [已知限制](docs/limitations.md) · [更新记录](CHANGELOG.md)
+[下载测试版](https://github.com/guanjunz432-ctrl/zotero-bilingual-reader/releases) · [English](README.en.md) · [安装与操作](docs/installation.md) · [隐私说明](PRIVACY.md) · [已知限制](docs/limitations.md) · [更新记录](CHANGELOG.md)
 
 Windows 测试版 · Zotero 9 · AGPL-3.0-only · 使用你自己的 Codex 登录
 

@@ -2,7 +2,7 @@
 
 **Source-position English–Chinese PDF reading in Zotero, including figure labels.**
 
-[简体中文](README.md) · [Installation](docs/installation.md) · [Privacy](PRIVACY.md) · [Limitations](docs/limitations.md)
+[Download preview](https://github.com/guanjunz432-ctrl/zotero-bilingual-reader/releases) · [简体中文](README.md) · [Installation](docs/installation.md) · [Privacy](PRIVACY.md) · [Limitations](docs/limitations.md)
 
 Early Windows preview for Zotero 9. Licensed under AGPL-3.0-only.
 
