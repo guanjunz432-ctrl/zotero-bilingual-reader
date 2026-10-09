@@ -5,7 +5,7 @@ from pathlib import Path
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 ROOT = Path(__file__).resolve().parents[1]
-MEMBERS = ("bootstrap.js", "bridge.js", "manifest.json")
+MEMBERS = ("bootstrap.js", "bridge.js", "manifest.json", "LICENSE")
 
 
 def public_bytes(path):
@@ -24,7 +24,8 @@ def build():
             info = ZipInfo(member, (2026, 1, 1, 0, 0, 0))
             info.compress_type = ZIP_DEFLATED
             info.external_attr = 0o644 << 16
-            archive.writestr(info, public_bytes(ROOT / "addon" / member))
+            path = ROOT / member if member == "LICENSE" else ROOT / "addon" / member
+            archive.writestr(info, public_bytes(path))
     digest = hashlib.sha256(target.read_bytes()).hexdigest()
     (dist / "SHA256SUMS.txt").write_text(f"{digest}  {target.name}\n", encoding="ascii")
     print(f"Built {target.name} ({len(MEMBERS)} allowlisted files)")
