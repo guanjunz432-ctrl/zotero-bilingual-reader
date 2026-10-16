@@ -17,10 +17,9 @@ def main():
             checks[key + "_exists"] = Path(config[key]).is_file()
     except (ValueError, OSError, KeyError, RuntimeError):
         checks["configured"] = False
-    checks["adapter_exists"] = (ROOT / "node_modules/@agentclientprotocol/codex-acp/dist/index.js").is_file()
     for name in ("simsun.ttc", "arial.ttf", "seguisym.ttf"):
         checks["font_" + name] = (font_directory() / name).is_file()
-    for package in ("PyMuPDF", "reportlab"):
+    for package in ("PyMuPDF", "reportlab", "pillow"):
         try:
             checks[package] = importlib.metadata.version(package)
         except importlib.metadata.PackageNotFoundError:

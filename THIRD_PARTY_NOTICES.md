@@ -8,8 +8,7 @@ Project source: Copyright 2026 Zotero Bilingual Reader contributors. GNU AGPL-3.
 | ReportLab 4.4.9 | TrueType character coverage; no local model | BSD-style; [source](https://github.com/MrBitBucket/reportlab-mirror) |
 | Pillow 12.3.0 | Bounded raster-ink analysis and asset inspection | MIT-CMU; [source](https://github.com/python-pillow/Pillow) |
 | charset-normalizer 3.5.2 | ReportLab dependency | MIT; [source](https://github.com/jawah/charset_normalizer) |
-| @agentclientprotocol/codex-acp 1.6.2 | ACP / Codex App Server adapter | Apache-2.0; Copyright 2025 JetBrains s.r.o. [Source](https://github.com/agentclientprotocol/codex-acp) |
-| @openai/codex 0.148.0 | Official CLI and authentication | Apache-2.0; [source](https://github.com/openai/codex) |
+| @openai/codex 0.163.0 | Official CLI and authentication | Apache-2.0; [source](https://github.com/openai/codex) |
 
 The complete Node dependency resolution is recorded in `package-lock.json`; installed packages retain their upstream licenses. `requirements.txt` pins the Python runtime dependencies. Do not remove upstream notices when redistributing a dependency or packaged runtime in a future release.
 
@@ -28,3 +27,7 @@ The application bridge, Python workflow and scripts were developed for this proj
 The synthetic example and its figure were authored specifically for this project and are included under the project license. They contain no research paper, user screenshot or library data. `synthetic-bilingual.pdf` uses prepared translations for repeatable rendering; `cloud-bilingual.pdf` is the separately generated cloud smoke-test result. Neither is an accuracy benchmark.
 
 GNU AGPL text was obtained from the SPDX license-list-data copy of AGPL-3.0-only. No original or dependency author should be understood to endorse this project.
+
+## Real-paper demonstration (separate license)
+
+The `paper-*` PDF and PNG assets derive from Green et al. (2017), DOI 10.5194/nhess-17-1-2017, CC BY 3.0. AI Chinese translation, side-by-side layout and crops are modifications. The source and authors do not endorse this project. These assets are not relicensed under AGPL. See [full attribution](docs/sample-provenance.md).

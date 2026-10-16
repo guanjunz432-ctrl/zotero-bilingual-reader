@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-16",
+  "release": "0.2.0-beta.1",
+  "codex_cli": "0.163.0",
+  "source_doi": "10.5194/nhess-17-1-2017",
+  "source_sha256": "a3d298713e944f645a2d357e16e70cb617f132e97a791a6b4cc96813976fd375",
+  "source_pages": [
+    1,
+    4,
+    7
+  ],
+  "published_pages": [
+    1,
+    4
+  ],
+  "translation_phase_seconds": 73.33,
+  "render_seconds": 19.83,
+  "end_to_end_seconds": 93.16,
+  "cache_rerun_seconds": 0.085,
+  "persisted_test_threads": 0,
+  "render_failed_pages": {},
+  "per_page": [
+    {
+      "page": 1,
+      "model": "gpt-6-luna",
+      "reasoning_effort": "low",
+      "ephemeral": true,
+      "elapsed_seconds": 19.72,
+      "usage": {
+        "input_tokens": 14388,
+        "cached_input_tokens": 4864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1292,
+        "reasoning_output_tokens": 0
+      },
+      "tools_used": [],
+      "native_regions": 11,
+      "raster_regions": 2
+    },
+    {
+      "page": 4,
+      "model": "gpt-6-luna",
+      "reasoning_effort": "low",
+      "ephemeral": true,
+      "elapsed_seconds": 20.11,
+      "usage": {
+        "input_tokens": 15212,
+        "cached_input_tokens": 4864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1444,
+        "reasoning_output_tokens": 0
+      },
+      "tools_used": [],
+      "native_regions": 22,
+      "raster_regions": 0
+    },
+    {
+      "page": 7,
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "ephemeral": true,
+      "elapsed_seconds": 32.65,
+      "usage": {
+        "input_tokens": 15771,
+        "cached_input_tokens": 4864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1556,
+        "reasoning_output_tokens": 0
+      },
+      "tools_used": [],
+      "native_regions": 37,
+      "raster_regions": 3
+    }
+  ],
+  "scope": "Single Windows machine; excludes setup, login, Zotero import. Final successful run; old-CLI rejected-model probes excluded. No quality or quota-percentage guarantee."
+}

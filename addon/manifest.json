@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Zotero Bilingual Reader",
-  "version": "0.1.0beta1",
+  "version": "0.2.0beta1",
   "description": "Source-position English-Chinese reading with figure labels and page recovery",
   "author": "Zotero Bilingual Reader contributors",
   "applications": {

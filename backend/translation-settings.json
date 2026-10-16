@@ -1,0 +1,7 @@
+{
+  "model": "gpt-6-luna",
+  "vision_model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "timeout_seconds": 240,
+  "max_attempts": 2
+}

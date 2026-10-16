@@ -1,67 +1,71 @@
 # Zotero Bilingual Reader
 
-**在 Zotero 中生成原版式中英对照 PDF，连同图中文字一起阅读。**
+在 Zotero 中把英文论文生成 **左英文、右中文的原版式对照 PDF**。正文、图注、图内坐标轴和图例都可以翻译，结果自动添加回原文献附件。
 
-[下载测试版](https://github.com/guanjunz432-ctrl/zotero-bilingual-reader/releases) · [English](README.en.md) · [安装与操作](docs/installation.md) · [隐私说明](PRIVACY.md) · [已知限制](docs/limitations.md) · [更新记录](CHANGELOG.md)
+**Windows 10/11 · Zotero 9 · 自己的 Codex 账户 · AGPL-3.0-only**
 
-Windows 测试版 · Zotero 9 · AGPL-3.0-only · 使用你自己的 Codex 登录
+[下载 0.2.0 预览版](https://github.com/guanjunz432-ctrl/zotero-bilingual-reader/releases/tag/v0.2.0-beta.1) · [安装步骤](docs/installation.md) · [English](README.en.md) · [实际验证](docs/validation.md) · [更新记录](CHANGELOG.md)
 
-![自制样例的中英文排版演示](docs/assets/demo.png)
+## 看真实生成效果
 
-> 早期预览：原型已在 Windows + Zotero 9.0.6 上处理过一篇 21 页文献。公开版进行了安装与隐私改造，验证范围见 [测试说明](docs/validation.md)。译文和图中文字定位需要人工核对；不承诺所有论文都能无误处理。
+下图是 Green 等（2017）论文**第 4 页的实际生成结果**，直接渲染自插件后端生成的 PDF，没有手工替换中文，也不是概念示意图。
 
-## 能做什么
+![真实论文第4页：左侧英文原页，右侧中文原版式](docs/assets/paper-page-04.png)
 
-- **从文献开始**：右键 Zotero 文献或英文 PDF，选择全文或指定页码。
-- **左右对照**：左侧保留英文原页，右侧按原文区域放置中文译文。
-- **图中文字**：尝试识别并翻译坐标轴、图例、流程框及图片中的英文；原始图形始终在左侧供核对。
-- **失败可续传**：先继续后续页面，再重试失败页；重新生成会复用已完成页面。
-- **自动回存**：结果作为新附件加回原文献；未完成页明确标记“中文待补”。
+**图也能做中英对照。**下面是同一输出中的图 2 放大：坐标轴、图例、图注变为中文，数值刻度和柱形保留。
 
-## 快速开始
+![实际输出图2：中英文坐标轴、图例、图注](docs/assets/paper-figure-02.png)
 
-1. 安装 **Windows 10/11、Zotero 9、Python 3.11+、Node.js 22+（含 npm）**。需要宋体、Arial 和 Segoe UI Symbol；环境检测会检查字体。
-2. 从本仓库 Releases 下载后端源码 ZIP，解压到固定目录。首次使用要同时安装后端和插件，单独安装 XPI 不够。
-3. 在解压目录打开 PowerShell，运行：
+[下载真实两页对照 PDF（原文第 1、4 页）](docs/assets/paper-bilingual-sample.pdf) · [原论文](https://doi.org/10.5194/nhess-17-1-2017) · [示例来源、许可与生成方式](docs/sample-provenance.md)
 
-   ```powershell
-   powershell -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
-   powershell -NoProfile -ExecutionPolicy Bypass -File .\login.ps1
-   ```
+原文 © Green 等，2017，CC BY 3.0；修改为 AI 中文翻译及左右对照排版。原作者未为插件背书。示例不代表所有论文都能达到相同质量。
 
-4. 在官方登录页面使用**自己的**账户登录。此应用使用独立的本机登录目录，不读取或复制已有 Codex 登录文件。
-5. Zotero → 工具 → 插件 → 齿轮 → 从文件安装插件，选择 `dist` 中的 `.xpi`。
-6. 右键一篇文献 → **Codex 中英对照 → 生成原版式中英对照（含图中文字）**。建议先输入 `1-2` 试译，完成后在原条目下打开新增附件。
+## 0.2.0 修复了什么
 
-详细步骤、缓存位置、升级和卸载见 [安装与操作指南](docs/installation.md)。
+- 临时请求替代逐页持久聊天；原有历史聊天不会自动删除。
+- 普通页使用轻量模型，复杂图页使用更强的视觉模型，两者均为低推理强度。
+- 独立 Python 环境；缺少依赖时提示修复方法，避免只报“后台退出 1”。
+- 完成页不重复翻译；内容未变时直接复用已排版 PDF。
+- 普通单页错误先继续后续页，再补试一次；登录、额度或模型权限错误停止整篇。
+- 斜排、极小图内标签尽量保留原图，在页底补充对照，减少覆盖图形。
 
-## 数据与费用
+## 使用什么模型，多久完成
 
-所选页面的文字、坐标和页面图像会交给 OpenAI 的 Codex 服务处理。PDF 解析、渲染、排版及缓存发生在本机；不下载本地模型。项目没有自建中转服务器、遥测或作者共享账号。
+| 内容 | 默认模型 | 推理强度 | 本次实测云端请求 |
+| --- | --- | --- | --- |
+| 普通正文、简单图表页 | `gpt-6-luna` | `low` | 19.72、20.11 秒/页 |
+| 大幅图像、复杂矢量图或扫描页 | `gpt-6.1-sol` | `low` | 32.65 秒/页 |
+| 本机解析与排版 | PyMuPDF 等确定性程序 | 不调用模型 | 本次 3 页排版 19.83 秒 |
 
-翻译消耗你自己的账户额度；额度、模型和可用性取决于你的账户及服务政策。开源不意味着云端调用免费或无限。官方 CLI 负责认证与令牌刷新，项目不要求提交任何登录文件。详见 [隐私说明](PRIVACY.md) 和 [官方认证说明](https://learn.chatgpt.com/docs/app-server)。
+**公开版实测 3 页总耗时 93.16 秒，约 1 分 33 秒**，包含页面准备、云端翻译和本机排版，不含首次安装、登录和 Zotero 导入。另一次本机 16 页测试的成功云端请求合计约 8 分 36 秒，**不是整篇端到端时间**。网络、账户、图文复杂程度及重试都会影响耗时。
 
-## 适合与限制
+分流依据页面图像面积和矢量路径数量，是启发式规则。本例图 2 由 Luna 完成，不是所有图都用强模型。模型权限因账户而异，可[修改模型设置](docs/installation.md#模型与速度设置)，不会自动回退到更昂贵模型。
 
-适合希望在 Zotero 中阅读英文论文、对照原图检查译文的用户。复杂表格、扫描页、密集图例、小字、旋转页面及数学上下标可能需要额外核对。图中文字覆盖框可能碰到邻近图形，中文可能缩小字号；请始终对照左侧原页。当前没有批量队列、术语库或跨平台安装承诺。
+降低推理、分流和缓存能减少不必要请求；不能把 token 数换算为固定的订阅额度百分比，也不保证节省比例。[完整测试口径](docs/validation.md)。
 
-## 开发与贡献
+## 安装和使用
+
+1. 准备 Windows 10/11、Zotero 9、Python 3.11+、Node.js 22+（含 npm）。
+2. 从 Release 下载 **source.zip 和 XPI**，将源码解压到固定目录。
+3. 在该目录运行 `setup.ps1`，再运行 `login.ps1`，使用自己的账户完成官方登录。
+4. Zotero → 工具 → 插件 → 从文件安装 XPI。
+5. 选中英文 PDF 或父文献 → 右键 → **Codex 中英对照** → 生成；页码留空为全文，也可先试 `1-2`。
+
+升级请停止旧任务，解压新版源码、重新运行 setup 并安装新版 XPI。登录和已有页面缓存保留。[详细步骤与故障恢复](docs/installation.md)。
+
+## 边界与隐私
+
+图内文字依赖视觉识别，密集地图、小字、倾斜标签和公式需人工核对；不能承诺所有文字都能识别、翻译或原位放下。[已知限制](docs/limitations.md)。
+
+本机不运行模型，不提供共享账号、转发服务器或遥测。所选页文字和图像发送至 OpenAI；本项目不读取、复制或发布登录凭据。译文及 PDF 缓存在本机，生成附件可能按你的 Zotero 设置同步。[数据流与隐私](PRIVACY.md)。
+
+## 开发与许可
 
 ```powershell
-.venv\Scripts\python.exe scripts\test.py
-node tests\test_native_bridge.cjs
-.venv\Scripts\python.exe scripts\privacy_check.py
-.venv\Scripts\python.exe scripts\build.py
+.\.venv\Scripts\python.exe scripts/test.py
+node tests/test_native_bridge.cjs
+.\.venv\Scripts\python.exe scripts/privacy_check.py
+.\.venv\Scripts\python.exe scripts/package_release.py
 ```
 
-欢迎提供可再分发的最小复现样例。请勿把个人论文、账户数据、登录文件或未经脱敏的日志提交到 Issues。见 [贡献指南](CONTRIBUTING.md) 和 [安全报告](SECURITY.md)。
-
-## 许可证与致谢
-
-本项目源码采用 **GNU AGPL v3 only**，见 [LICENSE](LICENSE)。依赖分别遵守其许可证，见 [第三方说明](THIRD_PARTY_NOTICES.md)。
-
-- [PyMuPDF](https://github.com/pymupdf/PyMuPDF)：PDF 解析、渲染和排版。
-- [Codex ACP](https://github.com/agentclientprotocol/codex-acp) 与 [OpenAI Codex](https://github.com/openai/codex)：云端模型接入。
-- [Zotero PDF Translate](https://github.com/windingwind/zotero-pdf-translate)、[Zotero PDF2zh](https://github.com/guaguastandup/zotero-pdf2zh)、[Zotero Plugin Template](https://github.com/windingwind/zotero-plugin-template)：参考其安装文档、版本发布和贡献入口的组织方式。此项目未使用 PDF2zh 翻译引擎，也未宣称与这些项目存在合作。
-
-这是独立社区项目，与 Zotero、OpenAI 及上述项目无官方隶属关系。
+源代码 AGPL-3.0-only；论文示例另按 CC BY 3.0 标注。[第三方说明](THIRD_PARTY_NOTICES.md) · [贡献指南](CONTRIBUTING.md) · [安全反馈](SECURITY.md)。非 Zotero 或 OpenAI 官方插件。
