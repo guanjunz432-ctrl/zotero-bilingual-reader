@@ -50,7 +50,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\login.ps1
 ## 5. 中途失败或停止
 
 - 使用“当前页完成后停止”，可保留已完成缓存。
-- 失败页不会阻止后续页，先处理剩余页，再最多补试两轮。
+- 普通单页格式错误先继续后续页，默认再补试一次；登录、额度或模型权限错误会停止整篇，避免无效请求。
 - 未完成结果会标注“中文待补”，并作为未完成附件回存。
 - 再次选择**同一个原 PDF 和相同页码**，即可读取缓存并补试。
 - 每次导出会新增附件；确认新版可用后，可由你自行删除旧的未完成附件。
@@ -76,6 +76,28 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\login.ps1 -Status
 | `jobs/` | 任务及回存状态，含本机路径和 Zotero 条目编号 |
 
 这些目录在源码目录之外，不应提交 GitHub。项目不提供自动上传日志功能。
+
+## 模型与速度设置
+
+默认 `gpt-6-luna` 用于普通页，`gpt-6.1-sol` 用于复杂图像、矢量图或扫描页，两者均为 `low`。分流参考图像面积和矢量路径数量，并非精准识别每一种图。所有页仍提供图像，简单图内文字也会尝试翻译。
+
+公开版固定官方 CLI 0.163.0；旧 0.148.0 在本次实测中不支持新模型名。升级必须重新运行 setup，不能只换 XPI。账户没有对应模型权限时会停止并保留缓存，不会悄悄更换更昂贵模型。
+
+默认值位于 `backend/translation-settings.json`。如希望升级保留个人设置，在 `%LOCALAPPDATA%\ZoteroBilingualReader\settings.json` 保留原有路径字段，增加以下 `translation` 对象：
+
+```json
+"translation": {
+  "model": "gpt-6-luna",
+  "vision_model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "timeout_seconds": 240,
+  "max_attempts": 2
+}
+```
+
+`max_attempts: 2` 指首次请求加一次补试；超时支持 30–600 秒，最多尝试 3 次。网络和权限故障应先解决，不建议不断重试。模型须为自己账户可用且支持图像输入的 Codex 模型。
+
+若提示依赖或独立环境缺失，从固定安装目录重新运行 `setup.ps1`，修复 `.venv`、CLI 和路径。登录过期运行 `login.ps1`。已有缓存不会因安装目录更新而删除；无需复制登录凭据。
 
 ## 7. 更新与卸载
 

@@ -1,49 +1,49 @@
 # Zotero Bilingual Reader
 
-**Source-position English–Chinese PDF reading in Zotero, including figure labels.**
+Generate English–Chinese, side-by-side PDFs in Zotero while retaining the source page layout. Body text, captions, axes and legends can be translated; the result is imported as a new attachment.
 
-[Download preview](https://github.com/guanjunz432-ctrl/zotero-bilingual-reader/releases) · [简体中文](README.md) · [Installation](docs/installation.md) · [Privacy](PRIVACY.md) · [Limitations](docs/limitations.md)
+**Windows 10/11 · Zotero 9 · Your own Codex account · AGPL-3.0-only**
 
-Early Windows preview for Zotero 9. Licensed under AGPL-3.0-only.
+[Download 0.2.0 preview](https://github.com/guanjunz432-ctrl/zotero-bilingual-reader/releases/tag/v0.2.0-beta.1) · [中文 / installation](README.md) · [Validation](docs/validation.md)
 
-![Synthetic bilingual layout example](docs/assets/demo.png)
+## Actual paper output
 
-Select a paper in Zotero, request a page range or the full PDF, and receive a new attachment with the English page on the left and a Chinese layout on the right. The pipeline attempts to translate figure labels, caches successful pages, retries failures after processing later pages, and labels incomplete output explicitly.
+Source page 4 of Green et al. (2017), rendered directly from the generated PDF. No mockup or manually substituted translations.
+
+![Actual paper page: English left, Chinese right](docs/assets/paper-page-04.png)
+
+The same output's Figure 2 shows translated axes, legend and caption, retaining numeric ticks and bars:
+
+![Actual bilingual figure crop](docs/assets/paper-figure-02.png)
+
+[Download two-page PDF (source pages 1 and 4)](docs/assets/paper-bilingual-sample.pdf) · [Original paper](https://doi.org/10.5194/nhess-17-1-2017) · [Attribution and reproduction](docs/sample-provenance.md)
+
+Source © Green et al., 2017, CC BY 3.0. Modified by AI Chinese translation and side-by-side layout; no author endorsement.
+
+## Models and measured time
+
+| Page type | Default model | Reasoning | Cloud request |
+| --- | --- | --- | --- |
+| Text / simple charts | `gpt-6-luna` | `low` | 19.72 and 20.11 seconds/page |
+| Complex graphics / scans | `gpt-6.1-sol` | `low` | 32.65 seconds/page |
+| Local typesetting | PyMuPDF and deterministic software | No model | 19.83 seconds for these 3 pages |
+
+A fresh public-backend run on source pages 1, 4 and 7 took **93.16 seconds end to end**, excluding setup, login and Zotero import. A separate 16-page prototype run recorded 8m36s summed successful cloud requests; that is not total processing time. These are single-machine samples, not a speed guarantee or subscription quota percentage. Figure 2 used Luna; routing is a page-level heuristic. Model access depends on the account.
+
+## Changes in 0.2.0
+
+Ephemeral requests replace persistent per-page ACP chats. Low-reasoning model routing, reusable rendered PDFs, clear dependency errors, and document-wide aborts on login/quota/model errors reduce unnecessary work. Ordinary page failures are retried once after the forward pass. Tiny or diagonal figure labels can be preserved with a bilingual note below the page.
 
 ## Install
 
-Requires Windows 10/11, Zotero 9, Python 3.11+, Node.js 22+ with npm, and the Windows SimSun, Arial and Segoe UI Symbol fonts. The installer checks fonts; installing the Simplified Chinese supplemental font feature may be necessary.
+Install Python 3.11+, Node.js 22+ with npm, and Zotero 9 on Windows. Download the source ZIP and XPI. Extract the source to a stable directory, run `setup.ps1`, then `login.ps1` using your own account. Install the XPI via Zotero's add-on manager. Right-click an English PDF or parent item → Codex 中英对照. Leave pages empty for all pages, or start with `1-2`.
 
-Download and extract the backend source ZIP from Releases into a permanent directory. In PowerShell, run:
+Updates require the new source/setup and XPI. Authentication and compatible caches remain in the dedicated application data directory. [Detailed instructions](docs/installation.md).
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\setup.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File .\login.ps1
-```
+## Privacy and limitations
 
-Sign in with your own account through the official Codex login page. Install the XPI built in `dist` via Zotero → Tools → Plugins → gear → Install Plugin From File. Both the backend and XPI are required.
+Selected page text and images go to OpenAI; parsing and layout run locally. No relay server, telemetry, shared account or local model weights. Credentials are managed only by the official CLI in an isolated profile. New translations use ephemeral requests; old history is not deleted. [Privacy](PRIVACY.md).
 
-Right-click a paper or PDF → **Codex 中英对照** → first menu item. Try `1-2` first; leave the page field empty for all pages. The generated attachment opens after completion. Repeat the same selection to retry unfinished pages. The preview's Zotero menu and detailed operation guide are in Chinese.
+Dense maps, tiny text, formulas and rotated labels need human review. Structural validation does not prove semantic accuracy or complete OCR. [Limitations](docs/limitations.md). This is a community project, not an official Zotero or OpenAI plugin.
 
-## Privacy and costs
-
-Selected page text, coordinates and images are sent to OpenAI. Parsing, rendering and typesetting run locally without local model weights. There is no project-operated relay, telemetry, shared account or included credential. Each user signs in independently; usage is subject to their account limits and service policies. Open source does not mean free or unlimited cloud inference.
-
-The official CLI manages its own credentials in an isolated local profile. The application never reads or copies its authentication storage. Translation caches contain document content; do not share them publicly. See [PRIVACY.md](PRIVACY.md).
-
-## Scope and evidence
-
-The original local prototype was exercised on Windows + Zotero 9.0.6 with a 21-page paper. The public package has changed installation and authentication; [validation notes](docs/validation.md) distinguish public-package checks from prototype experience. No broad accuracy benchmark or macOS/Linux compatibility claim is made.
-
-Dense labels may shrink; OCR, formulas, tables and masks over figure text can be inaccurate. Always compare against the left-hand source. A completed request is not a scholarly review.
-
-## Development
-
-```powershell
-.venv\Scripts\python.exe scripts\test.py
-node tests\test_native_bridge.cjs
-.venv\Scripts\python.exe scripts\privacy_check.py
-.venv\Scripts\python.exe scripts\build.py
-```
-
-See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Repository organization was informed by Zotero PDF Translate, Zotero PDF2zh and Zotero Plugin Template; their translation engines or templates are not bundled. This independent community project is not affiliated with Zotero or OpenAI.
+Source code: AGPL-3.0-only. Paper samples: CC BY 3.0 with attribution. [Third-party notices](THIRD_PARTY_NOTICES.md).

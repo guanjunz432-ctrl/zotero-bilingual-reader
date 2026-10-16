@@ -4,6 +4,9 @@ def process_pages(pages, process, cached, progress=print, stop=None, checkpoint=
     def save():
         result['completed_pages'].sort()
         if checkpoint:checkpoint(result)
+    # Preserve later cached pages even if login/quota fails on an earlier page.
+    result['completed_pages']=[p for p in pages if cached(p)]
+    save()
     pending=list(pages)
     for round_index in range(attempts):
         for page in pending:
@@ -20,6 +23,9 @@ def process_pages(pages, process, cached, progress=print, stop=None, checkpoint=
                 result['failed_pages'].pop(str(page),None)
             except Exception as exc:
                 result['failed_pages'][str(page)]={'error':str(exc),'attempts':round_index+1}
+                if getattr(exc,'fatal',False):
+                    result.update(status='error',service_error=str(exc))
+                    progress(str(exc));save();return result
                 progress(f'第 {page} 页未完成：{exc}；继续处理其他页，稍后单独补试')
             save()
         pending=[p for p in pages if p not in result['completed_pages']]

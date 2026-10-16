@@ -21,6 +21,11 @@ def configure(node):
               "node_path": str(Path(node).resolve()), "codex_path": str(candidates[0].resolve())}
     base = data_dir()
     base.mkdir(parents=True, exist_ok=True)
+    previous = base / "settings.json"
+    if previous.exists():
+        prior = json.loads(previous.read_text(encoding="utf-8-sig"))
+        if "translation" in prior:
+            config["translation"] = prior["translation"]
     (base / "settings.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
     print("Local backend configuration saved (no credentials).")
 
